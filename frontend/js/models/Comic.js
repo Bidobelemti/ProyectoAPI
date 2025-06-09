@@ -1,17 +1,5 @@
 
-/**
- * @fileoverview 
- * @module models/Comic
- */
 
-/**
- * @class
- * @extends Backbone.Model
- * @property {object} defaults 
- * @property {string} defaults.title
- * @property {string} defaults.thumbnail
- * @property {string} defaults.description 
- */
 const Comic = Backbone.Model.extend({
     defaults: {
         title: 'Título Desconocido',

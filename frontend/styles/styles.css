@@ -11,6 +11,8 @@ body {
 
 #app-region {
     padding: 1.5rem;
+    background-color: white;
+    border-radius: 0px, 0px, 1px, 1px;
 }
 
 #app-region p {
@@ -24,24 +26,44 @@ body {
     color: #374151;
 }
 
-.container {
-    max-width: 960px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    /* shadow-lg */
-    border-radius: 0.5rem;
-    overflow: hidden;
+.containerMain {
+    display: flex;
+    flex-direction: column; /* Apila hijos verticalmente */
+    width: 800px;
+    height: fit-content; /* Conserva alto natural */
 }
+
+#modal-container {
+    position: fixed;
+    order: 3;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de todo */
+    pointer-events: none; /* Permite interactuar con elementos debajo cuando está oculto */
+    opacity: 0; /* Inicialmente invisible */
+    transition: opacity 0.3s ease;
+}
+
+#modal-container.active {
+    pointer-events: auto; /* Permite interactuar con el modal cuando está activo */
+    opacity: 1; /* Visible cuando tiene la clase active */
+}
+
 
 .app-header {
     background-color: #ef4444;
     color: white;
     padding: 1.5rem;
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
+
+    border-radius: 0.5rem;
+
 }
 
 .app-header h1 {
@@ -91,11 +113,92 @@ body {
     transform: scale(1.05);
 }
 
-
-
 footer {
     padding: 1rem;
     text-align: center;
     color: #4b5563;
     border-top: 1px solid #e5e7eb;
+}
+
+#header-region {
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px, 8px, 0px, 0px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+#header-region h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+#header-region input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #333; 
+  background-color: #f9f9f9;
+}
+
+#header-region #btnLogin {
+  width: 100%;
+  padding: 10px;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+#header-region #loginMessage {
+  color: #666;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Estilos para el estado logueado */
+#header-region .logged-in-message {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+#header-region p {
+  text-align: center;
+  color: #333;
+}
+
+#header-region .logged-in-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+#header-region #btnMisComics {
+  flex: 1;
+  padding: 10px;
+  background-color: #34a853; /* Verde */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#header-region #btnLogout {
+  flex: 1;
+  padding: 10px;
+  background-color: #ea4335; /* Rojo */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
 }

@@ -1,47 +1,48 @@
+window.appState = {
+    db: null,
+    auth: null,
+    userId: null,
+    isReady: false, // Indica si Firebase y la autenticación inicial están listos
+    currentUserModel: null // Para almacenar el modelo de usuario logueado (simulado)
+};
+window.showModalMessage = function (message) {
+    const modalTemplate = _.template(document.getElementById('modal-message-template').innerHTML);
+    const modalHtml = modalTemplate({ message: message });
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = modalHtml;
 
-/**
- * @fileoverview 
- * @module app
- */
+    modalContainer.querySelector('.modal-close-btn').addEventListener('click', () => {
+        modalContainer.innerHTML = '';
+    });
+};
 
-/**
- * @class
- * @extends Marionette.Application
- * @property {string} region 
- *
- * @method onStart 
- */
 const App = Marionette.Application.extend({
-    region: '#app-region',
 
-    onStart: function () {
+    onStart: function() {
         console.log('Aplicación Marionette iniciada.');
 
-        const comics = new Comics();
+        window.appState.db = window.firebaseDb;
+        window.appState.auth = window.firebaseAuth;
+        window.appState.userId = window.currentUserId; 
+        window.appState.isReady = window.isFirebaseReady;
 
-        const view = new ComicsCollectionView({
-            collection: comics
+        if (window.appState.auth) {
+            window.appState.auth.onAuthStateChanged(user => {
+                window.appState.userId = user ? user.uid : null;
+                console.log('Estado de autenticación de Firebase cambiado. Nuevo userId:', window.appState.userId);
+            });
+        }
+
+        const globalView = new VistaGlobal({
+            db: window.appState.db,
+            auth: window.appState.auth,
+            getUserId: () => window.appState.userId,
+            appId: typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'
         });
 
-        this.showView(view);
+        globalView.render()
+        //this.showView(globalView);
 
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            const title = document.getElementById('comicInput').value;
-
-            if (title.trim() !== '') {
-                comics.fetchByTitle(title);
-            } else {
-                document.getElementById('messages').innerHTML = '<p class="text-orange-500">Por favor, introduce un título para buscar.</p>';
-                comics.reset();
-            }
-        });
-
-        console.log('Marionette objeto:', Marionette);
+        console.log('Instancias de Firebase y estado de la aplicación disponibles globalmente (window.appState):', window.appState);
     }
-});
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    const myApp = new App();
-    myApp.start();
 });

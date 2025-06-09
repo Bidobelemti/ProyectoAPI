@@ -12,20 +12,15 @@
 </head>
 
 <body>
-    <div class="container">
-        <header class="app-header">
-            <h1>Explorador de Cómics de Marvel</h1>
+    <div class="containerMain">
+        <header class="app-header p-6 rounded-t-lg">
+            <h1 class="text-3xl font-bold text-center">Explorador de Cómics de Marvel</h1>
+            <div class="container"></div>
         </header>
 
-        <div id="search-region">
+        <div id="messages" class="p-4 text-center text-gray-700">
         </div>
-
-        <div id="messages">
-        </div>
-
-        <main id="app-region">
-
-        </main>
+        <div id="modal-container"></div>
 
         <footer>
             &copy; 2025 Marvel Comics App. Datos proporcionados por Marvel.com.
@@ -33,15 +28,126 @@
         </footer>
     </div>
 
+
+
+    <script type="module">
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import {
+            getAuth,
+            signInAnonymously,
+            signInWithCustomToken,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            addDoc,
+            setDoc,
+            updateDoc,
+            deleteDoc,
+            onSnapshot,
+            collection,
+            query,
+            where,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Asegúrate de que estas variables estén disponibles globalmente
+        window.firebaseApp = null;
+        window.firebaseAuth = null;
+        window.firebaseDb = null;
+        window.currentUserId = null;
+        window.isFirebaseReady = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('DOM completamente cargado. Inicializando Firebase...');
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyCb2CHSyQrvasFHcMrCtBTJlFpB02KZTbc",
+                authDomain: "usuariocomics.firebaseapp.com",
+                projectId: "usuariocomics",
+                storageBucket: "usuariocomics.firebasestorage.app",
+                messagingSenderId: "954733643709",
+                appId: "1:954733643709:web:9e5017df7e43fc75f834d4",
+                measurementId: "G-35TEV19E8M"
+            };
+
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+            try {
+                window.firebaseApp = initializeApp(firebaseConfig);
+                window.firebaseAuth = getAuth(window.firebaseApp);
+                window.firebaseDb = getFirestore(window.firebaseApp);
+
+                // Autenticación inicial
+                if (initialAuthToken) {
+                    await signInWithCustomToken(window.firebaseAuth, initialAuthToken);
+                    console.log('Autenticado con token personalizado.');
+                } else {
+                    await signInAnonymously(window.firebaseAuth);
+                    console.log('Autenticado anónimamente.');
+                }
+
+                // Listener para el estado de autenticación
+                onAuthStateChanged(window.firebaseAuth, (user) => {
+                    if (user) {
+                        window.currentUserId = user.uid;
+                        console.log('Usuario actual:', window.currentUserId);
+                    } else {
+                        window.currentUserId = null;
+                        console.log('Ningún usuario logueado.');
+                    }
+                    // Una vez que el estado de auth ha sido verificado, la app está lista
+                    // Solo iniciamos la aplicación Marionette una vez para evitar múltiples arranques.
+                    if (!window.isFirebaseReady) {
+                        window.isFirebaseReady = true;
+                        console.log('Firebase listo. Iniciando aplicación Backbone/Marionette.');
+                        // Inicia la aplicación Marionette una vez que Firebase esté listo
+                        const myApp = new App();
+                        myApp.start();
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error al inicializar Firebase o autenticar:', error);
+                document.getElementById('messages').innerHTML = `<p class="text-red-500">Error al iniciar la aplicación: ${error.message}</p>`;
+            }
+        });
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.5.0/backbone-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.marionette/4.1.2/backbone.marionette.min.js"></script>
+
+    <script src="js/models/Usuario.js"></script>
+    <script src="js/models/Favorito.js"></script>
     <script src="js/models/Comic.js"></script>
     <script src="js/collections/Comics.js"></script>
+    <script src="js/collections/Favoritos.js"></script>
     <script src="js/views/ComicView.js"></script>
     <script src="js/views/ComicsCollectionView.js"></script>
+    <script src="js/views/VistaDetallesComic.js"></script>
+    <script src="js/views/FavoritosCollectionView.js"></script>
+    <script src="js/views/VistaFormLogin.js"></script>
+    <script src="js/views/VistaBuscarComics.js"></script>
+    <script src="js/views/VistaGlobal.js"></script>
+
     <script src="js/app.js"></script>
+
+    <script type="text/template" id="modal-message-template">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <p><%= message %></p>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 modal-close-btn">Cerrar</button>
+            </div>
+        </div>
+    </script>
 </body>
 
 </html>
