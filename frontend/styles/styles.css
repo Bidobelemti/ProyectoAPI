@@ -29,7 +29,7 @@ body {
 .containerMain {
     display: flex;
     flex-direction: column; /* Apila hijos verticalmente */
-    width: 800px;
+    width: 1000px;
     height: fit-content; /* Conserva alto natural */
 }
 

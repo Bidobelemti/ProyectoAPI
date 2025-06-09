@@ -1,22 +1,5 @@
-// js/views/ComicsCollectionView.js
 
-/**
- * @fileoverview Define la vista de colección Marionette para mostrar una lista de cómics.
- * Utiliza ComicView para renderizar cada elemento individual del cómic.
- * @module views/ComicsCollectionView
- */
 
-/**
- * @class
- * @extends Marionette.CollectionView
- * @property {string} tagName - La etiqueta HTML para el elemento raíz de la vista de colección.
- * @property {string} className - Las clases CSS para el elemento raíz.
- * @property {ComicView} childView - La vista que se utilizará para renderizar cada modelo en la colección.
- * @property {function} emptyView - La vista que se muestra cuando la colección está vacía.
- * @property {object} childViewEvents - Eventos de las vistas hijas a los que esta vista debe reaccionar.
- *
- * @method initialize - Inicializa la vista de colección.
- */
 const ComicsCollectionView = Marionette.CollectionView.extend({
     tagName: 'div', // Cambiado de 'ul' a 'div' para usar el grid de Tailwind
     className: 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4', // Clases de Tailwind para un grid responsivo
