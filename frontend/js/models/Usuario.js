@@ -1,15 +1,3 @@
-/**
- * @fileoverview 
- * @module models/Usuario
- */
-
-/**
- * @class
- * @extends Backbone.Model
- * @property {object} defaults 
- * @property {string} defaults.username 
- * @property {boolean} defaults.loggedIn 
- */
 const Usuario = Backbone.Model.extend({
     defaults: {
         username: '',
@@ -17,9 +5,6 @@ const Usuario = Backbone.Model.extend({
         loggedIn: false
     },
 
-    /**
-     * @param {object} options 
-     */
     login: function (options) {
 
         const username = this.get('username');
@@ -37,6 +22,14 @@ const Usuario = Backbone.Model.extend({
             if (options && options.error) {
                 options.error(this, error, options);
             }
+        }
+    },
+    validate: function (attrs) {
+        if (!attrs.comicId) {
+            return 'Se requiere un ID de cómic para un favorito.';
+        }
+        if (!attrs.userId) {
+            return 'Se requiere un ID de usuario para un favorito.';
         }
     },
 
