@@ -23,7 +23,7 @@ app.get('/api/comics', async (req, res) => {
   const { title } = req.query;
   const ts = Date.now().toString();
   const publicKey = 'fd7855d3ea993643a7f632036e448990';
-  const privateKey = 'ea2f3685bc95a9afe3bca94687f6c4b85d9d6282';
+  const privateKey = '';
 
   console.log('--- Nueva solicitud a /api/comics ---');
   console.log('Título de búsqueda:', title);
